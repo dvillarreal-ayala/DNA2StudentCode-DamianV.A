@@ -17,7 +17,13 @@ public class DNA {
      */
     public static int STRCount(String sequence, String STR) {
         // Used to track the longest consecutive run of STR
-        int numOfConsecutive = 0;
+        int longest = 0;
+        int consecutiveCandidate = 0;
+        int index = sequence.indexOf(STR);
+        // We have a radix of 4 because that's how many different characters can appear in our sequence.
+        // P is a large prime number (less than 2^63 -1) that we use as a divisor that maximizes unique remainders.
+        int radix = 4;
+        long p = 54321102419L;
 
         /*
           In this for loop, iterate through the sequence and search for instances of the STR
@@ -31,11 +37,13 @@ public class DNA {
           starting at i, then compares the chars to the STR in the intended order. If the chars don't
           add up to the same value as the STR's unique number or fails a comparison within the helper, then
           reject.
+          - Learned this process is hashing so we will use Polynomial Rolling Hash Function to create
+          a unique long so that we can do constant time look-ups/comparisons.
          */
         /**
          * ASCII value for CAPITAL A is 65, Z is 90
          */
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < sequence.length(); i++)
         {
             char monitored = sequence.charAt(i);
 
